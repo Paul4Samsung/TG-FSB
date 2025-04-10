@@ -91,7 +91,7 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 	if strings.Contains(file.MimeType, "video") || strings.Contains(file.MimeType, "audio") || strings.Contains(file.MimeType, "pdf") {
 		row.Buttons = append(row.Buttons, &tg.KeyboardButtonURL{
 			Text: "Stream",
-			URL:  link,
+			URL:  fmt.Sprintf("%s/play/%d?hash=%s", config.ValueOf.Host, messageID, hash),
 		})
 	}
 	markup := &tg.ReplyInlineMarkup{

@@ -71,6 +71,7 @@ func getRouter(log *zap.Logger) *gin.Engine {
 			Version: versionString,
 		})
 	})
+	router.LoadHTMLGlob("templates/*")
 	routes.Load(log, router)
 	return router
 }

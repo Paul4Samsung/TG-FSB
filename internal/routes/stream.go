@@ -21,6 +21,8 @@ func (e *allRoutes) LoadHome(r *Route) {
 	log = e.log.Named("Stream")
 	defer log.Info("Loaded stream route")
 	r.Engine.GET("/stream/:messageID", getStreamRoute)
+	r.Engine.HEAD("/stream/:messageID", getStreamRoute)
+	r.Engine.GET("/play/:messageID", renderPlayer)
 }
 
 func getStreamRoute(ctx *gin.Context) {
@@ -128,4 +130,16 @@ func getStreamRoute(ctx *gin.Context) {
 			log.Error("Error while copying stream", zap.Error(err))
 		}
 	}
+}
+
+func renderPlayer(ctx *gin.Context) {
+	messageID := ctx.Param("messageID")
+	hash := ctx.Query("hash")
+
+	// Construct file stream URL to pass into the template
+	streamURL := fmt.Sprintf("/stream/%s?hash=%s", messageID, hash)
+
+	ctx.HTML(http.StatusOK, "player.html", gin.H{
+		"FileURL": streamURL,
+	})
 }
